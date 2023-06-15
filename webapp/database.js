@@ -46,16 +46,18 @@ function lookupTasks() {
 
 function getCurrentTask() {
     lookupTasks();
-    return currentTasks.pop();
+    return currentTasks.top();
 }
 
 function setTaskCompleted(task) {
     task.completed = true;
 }
 
+export default {getCurrentTask, setTaskCompleted}
+
 // END REGION API
 
-export default currentTasks
+
 
 
 
