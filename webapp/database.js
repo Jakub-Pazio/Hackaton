@@ -8,3 +8,5 @@ const task = {
   completed: false,
   dueDate: null
 };
+
+module.exports = task

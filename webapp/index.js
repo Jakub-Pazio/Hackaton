@@ -2,6 +2,8 @@ const express = require('express')
 const app = express()
 const port = 3000
 
+const task = require('./database');
+
 // Serve static files from the "public" directory
 app.use(express.static('public'));
 
@@ -11,7 +13,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/action', (req, res) => {
-  res.send({ cosik: 'XD' });
+  res.send({ cosik: task });
 });
 
 app.listen(port, () => {
