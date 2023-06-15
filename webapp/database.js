@@ -34,6 +34,7 @@ const currentTasks = new PriorityQueue({ taskComparator });
 var completedTasks = [];
 
 function lookupTasks() {
+    let t;
     for (t in currentTasks) {
         if(t.completed || Date.now() > t.dueDate) {
             myArray.splice(currentTasks.indexOf(t), 1);
@@ -54,7 +55,7 @@ function setTaskCompleted(task) {
 
 // END REGION API
 
-export default task
+export default currentTasks
 
 
 

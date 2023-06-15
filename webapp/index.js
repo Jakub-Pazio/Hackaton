@@ -3,6 +3,7 @@ const app = express()
 const port = 3000
 
 import task from './database.js';
+import currentTasks from "./database.js";
 
 // Serve static files from the "public" directory
 app.use(express.static('public'));
@@ -13,7 +14,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/action', (req, res) => {
-  res.send({ cosik: task });
+  res.send({ cosik: currentTasks });
 });
 
 app.listen(port, () => {
