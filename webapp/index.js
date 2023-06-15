@@ -1,8 +1,8 @@
-const express = require('express')
+import express from 'express';
 const app = express()
 const port = 3000
 
-const task = require('./database');
+import task from './database.js';
 
 // Serve static files from the "public" directory
 app.use(express.static('public'));
