@@ -15,7 +15,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/action', (req, res) => {
-  res.send({ cosik: getCurrentTaskObject() });
+  res.send({ currentTask: getCurrentTask() });
 });
 
 app.post('/send', (req, res) => {

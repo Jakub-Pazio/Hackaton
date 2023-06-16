@@ -1,14 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Fetch Data Example</title>
   <script>
     function fetchData() {
-      fetch('/action')
+      return fetch('/action')
               .then(response => response.json())
               .then(data => {
-                // Use the received data
                 console.log(data);
+                return data;
               })
               .catch(error => {
                 // Handle any errors
@@ -40,9 +39,9 @@
 
   <button type="button" id="crTab" onclick="createTable()">Create Table</button>
 </form>
-
 <script>
-  document.getElementById('taskForm').addEventListener('submit', function(event) {
+
+document.getElementById('taskForm').addEventListener('submit', function(event) {
     event.preventDefault(); // Prevent the form from submitting normally
 
     // Fetch the form data
@@ -79,12 +78,53 @@
             });
   });
   var dane = [];
-
+  
   function createTable(){
-    var tabela = document.createElement("table");
+    fetch('/action')
+              .then(response => response.json())
+              .then(data => {
+                console.log(data)
+                //let values = Object.values(data);
+                let table = document.createElement("table");
+                let row = document.createElement("tr");
+
+                let textCol = document.createElement("td");
+                let durationCol = document.createElement("td");
+                let beginDateCol = document.createElement("td");
+                let dueDateCol = document.createElement("td");
+
+                let text = document.createTextNode(data.currentTask.text);
+                let duration = document.createTextNode(data.currentTask.duration/60000);
+                let beginDate = document.createTextNode(data.currentTask.beginDate);
+                let dueDate = document.createTextNode(data.currentTask.dueDate);
+
+                textCol.appendChild(text);
+                durationCol.appendChild(duration);
+                beginDateCol.appendChild(beginDate);
+                dueDateCol.appendChild(dueDate);
+
+                row.appendChild(textCol);
+                row.appendChild(durationCol);
+                row.appendChild(beginDateCol);
+                row.appendChild(dueDateCol);
+
+                table.appendChild(row);
+                document.body.appendChild(table);
+              })
+              .catch(error => {
+                // Handle any errors
+                console.error('Error:', error);
+              });
+
+    //console.log(fetchData());
+    //data = Object.values(fetchData());
+
+    //var tekst = document.createTextNode(data[0]);
+    
+    //wiersz.appendChild(tekst);
 
     // Iterowanie przez tablicę danych
-    for (var i = 0; i < dane.length; i++) {
+    /*for (var i = 0; i < dane.length; i++) {
       var wiersz = document.createElement("tr");
 
       // Iterowanie przez elementy w wierszu
@@ -96,15 +136,11 @@
       }
 
       tabela.appendChild(wiersz);
-    }
+    }*/
 
     // Dodanie tabeli do dokumentu
-    document.body.appendChild(tabela);
+    
   }
-
-
-
 </script>
-
 </body>
 </html>
