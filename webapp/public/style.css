@@ -32,10 +32,10 @@ html {
 }
 
 #hamsterCage {
-    top: 60%;
+    top: 57%;
     left: 40%;
     width: 60%;
-    height: 50%;
+    height: 55%;
     position: fixed;
 }
 
@@ -50,7 +50,7 @@ html {
     width: 80%;
     height: 90%;
     border-radius: 40px 40px 40px 40px;
-    top: 10%;
+    top: 5%;
     left: 8%;
 }
 
@@ -337,6 +337,7 @@ img {
 }
 
 #form {
+    display: none;
     position: absolute;
     top: 10%;
     left: 10%;
@@ -384,4 +385,5 @@ input:focus {
     right: 30%;
     height: 70%;
     width: 85%;
+    display: none;
 }
