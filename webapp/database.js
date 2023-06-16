@@ -66,16 +66,9 @@ function lookupTasks() {
 export function loadRegularTasksData() {
   try {
     const doc = yaml.load(fs.readFileSync('regularTasks.yml', 'utf8'));
-    const elements = Object.values(doc);
-    for(const e in elements) {
-      const variables = Object.values(e);
-
-      console.log(e);
-      console.log(variables.priority);
-      console.log(variables.length);
-      console.log(variables.dueTime);
-
-      regularTasks.push(new RegularTask(v, v.priority, v.length, v.dueTime))
+    for(const element in doc) {
+      const properties = doc[element]
+      regularTasks.push(new RegularTask(element, properties.priority, properties.length, properties.dueTime))
     }
   } catch (e) {
     console.log(e);
