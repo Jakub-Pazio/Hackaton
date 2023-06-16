@@ -58,6 +58,7 @@ function refreshTaskQueue() {
     let t;
     for (t in currentTasks) {
         if(t.completed || Date.now() > t.dueDate) {
+            completedTasks.push(currentTasks.indexOf(t))
             currentTasks.splice(currentTasks.indexOf(t), 1);
         }
     }
