@@ -3,15 +3,23 @@ import yaml from "js-yaml"
 import fs from "fs"
 
 class Task {
-  constructor(text,userPriority,systemPriority,length,completed,dueDate) {
-    this.text = text,
-      this.userPriority = userPriority, // 0-10
-      this.systemPriority = systemPriority, // 0-10
-      this.length = length, // ms
-      this.completed = completed,
-      this.dueDate = dueDate; // date
+  constructor(text,priority,length,dueDate) {
+      this.text = text, // string
+      this.priority = priority, // int 0-10
+      this.length = length, // time ms
+      this.dueDate = dueDate, // date
+      this.completed = false; // boolean
   }
 };
+
+class RegularTask {
+  constructor(text,priority,length,dueTime) {
+    this.text = text,
+    this.priority = priority,
+    this.length = length,
+    this.dueTime = dueTime;
+  }
+}
 
 const comparator = (a, b) => {
 
@@ -37,6 +45,8 @@ const comparator = (a, b) => {
 const currentTasks = new PriorityQueue({ comparator });
 var completedTasks = [];
 
+const regularTasks = [];
+
 function lookupTasks() {
     let t;
     for (t in currentTasks) {
@@ -51,31 +61,35 @@ function lookupTasks() {
     });
 }
 
-class Properties {
-  static sleepTime = null
-  static wakeupTime = null
+// API
 
-   static init() {
-    try {
-      const doc = yaml.load(fs.readFileSync('properties.yml', 'utf8'));
-      this.sleepTime = doc.sleepTime.split(":");
-      this.wakeupTime = doc.wakeupTime.split(":");
-    } catch (e) {
+export function loadRegularTasksData() {
+  try {
+    const doc = yaml.load(fs.readFileSync('regularTasks.yml', 'utf8'));
+    const elements = Object.values(doc);
+    for(const e in elements) {
+      const variables = Object.values(e);
+
       console.log(e);
-    }
-  }
-};
+      console.log(variables.priority);
+      console.log(variables.length);
+      console.log(variables.dueTime);
 
-export function initDatabase() {
-  Properties.init()
-  
-  let date = new Date(Date.now())
-  date.setDate(date.getDate()+1)
-  date.setHours(Properties.sleepTime[0],Properties.sleepTime[1],Properties.sleepTime[2]);
-  addNewTask("Go to sleep", 0, 28800000, date)
+      regularTasks.push(new RegularTask(v, v.priority, v.length, v.dueTime))
+    }
+  } catch (e) {
+    console.log(e);
+  }
 }
 
-// REGION API
+export function refreshRegularTasks() {
+  let date = new Date(Date.now())
+  date.setDate(date.getDate()+1)
+  date.setHours(Properties.wakeupTime[0],Properties.wakeupTime[1],Properties.wakeupTime[2]);
+  addNewTask("Sleep", 0, Properties.sleepLength, date)
+
+
+}
 
 export function getCurrentTask() {
     lookupTasks();
@@ -86,12 +100,12 @@ export function setTaskCompleted(task) {
     task.completed = true;
 }
 
-export function addNewTask(text,userPriotity,length,dueDate) {
-  let t = new Task(text,userPriotity,0,length,false,dueDate)
+export function addNewTask(text,priority,length,dueDate) {
+  let t = new Task(text,priority,length,dueDate)
   currentTasks.push(t)
 }
 
-// END REGION API
+// END API
 
 
 
