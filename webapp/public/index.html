@@ -8,6 +8,9 @@
     <link rel="stylesheet" href="style.css">
     <script>
 
+fetchData();
+
+function fetchData() {
 fetch('/action')
               .then(response => response.json())
               .then(data => {
@@ -42,6 +45,7 @@ fetch('/action')
       // Handle any errors
       console.error('Error:', error);
     })
+  }
     
         
         function changePrompot(prompt, text) {
@@ -65,6 +69,7 @@ fetch('/action')
             },
             body: JSON.stringify(body)
           });
+          location.reload();
     } 
     </script>
 </head>
