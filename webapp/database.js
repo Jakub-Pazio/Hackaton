@@ -1,12 +1,14 @@
 import PriorityQueue from "priorityqueue";
 
-const task = {
-  text: 'Unnamed task',
-  userPriority: 0, // 0-10
-  systemPriority: 0, // 0-10
-  length: 0, // ms
-  completed: false, 
-  dueDate: null // date
+class Task {
+  constructor(text,userPriority,systemPriority,length,completed,dueDate) {
+    this.text = text,
+      this.userPriority = userPriority, // 0-10
+      this.systemPriority = systemPriority, // 0-10
+      this.length = length, // ms
+      this.completed = completed,
+      this.dueDate = dueDate; // date
+  }
 };
 
 const taskComparator = (a, b) => {
@@ -40,9 +42,9 @@ function lookupTasks() {
             currentTasks.splice(currentTasks.indexOf(t), 1);
         }
     }
-    temp = currentTasks.toArray();
+    let temp = currentTasks.toArray();
     currentTasks.clear();
-    temp.array.forEach(element => {
+    temp.forEach(element => {
         currentTasks.push(element);
     });
 }
@@ -59,12 +61,8 @@ export function setTaskCompleted(task) {
 }
 
 export function addNewTask(text,userPriotity,length,dueDate) {
-  t = task.create()
-  t.text = text;
-  t.userPriority = userPriotity;
-  t.length = length;
-  t.dueDate = dueDate;
-  currentTasks.push(t);
+  let t = new Task(text,userPriotity,0,length,false,dueDate)
+  currentTasks.push(t)
 }
 
 // export default {getCurrentTask, setTaskCompleted, addNewTask}
