@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script>
+    function fetchData() {
+      return fetch('/action')
+              .then(response => response.json())
+              .then(data => {
+                console.log(data);
+                return data;
+              })
+              .catch(error => {
+                // Handle any errors
+                console.error('Error:', error);
+              });
+    }
+  </script>
+</head>
+<body>
+<h1>Fetch Data Example</h1>
+<button onclick="fetchData()">Fetch Data</button>
+<h1>Create Task</h1>
+<form action="/send" method="POST" id="taskForm">
+  <h1>Create Task</h1>
+
+  <label for="text">Task Text:</label>
+  <input type="text" id="text" name="text" required><br><br>
+
+  <label for="userPriority">User Priority (0-10):</label>
+  <input type="number" id="userPriority" name="userPriority" min="0" max="10" required><br><br>
+
+  <label for="length">Task Length (ms):</label>
+  <input type="number" id="length" name="length" required><br><br>
+
+  <label for="dueDate">Due Date:</label>
+  <input type="datetime-local" id="dueDate" name="dueDate" required><br><br>
+
+  <button type="submit" id="buttonsend">Create Task</button>
+
+  <button type="button" id="crTab" onclick="createTable()">Create Table</button>
+</form>
+<script>
+
+document.getElementById('taskForm').addEventListener('submit', function(event) {
+    event.preventDefault(); // Prevent the form from submitting normally
+
+    // Fetch the form data
+    const form = document.getElementById('taskForm');
+    const formData = new FormData(form);
+    dane.push(formData.get('text'));
+    dane.push(formData.get('userPriority'));
+    dane.push(formData.get('length'));
+    dane.push(formData.get('dueDate'));
+    // Create the request body
+    const body = {
+      text: formData.get('text'),
+      userPriority: formData.get('userPriority'),
+      length: formData.get('length'),
+      dueDate: formData.get('dueDate')
+    };
+
+    // Send the POST request
+    fetch('/send', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    })
+            .then(response => response.json())
+            .then(data => {
+              console.log(data); // Log the response data
+              // Perform any desired actions with the response data
+            })
+            .catch(error => {
+              console.error('Error:', error);
+              // Handle any errors that occurred during the request
+            });
+  });
+  var dane = [];
+  
+  function createTable(){
+    fetch('/action')
+              .then(response => response.json())
+              .then(data => {
+                console.log(data)
+                let objects = data.allTasks;
+
+                for(let i = 0; i < objects.length; i++) {
+                  let current = objects[i];
+
+                  let table = document.createElement("table");
+                  let row = document.createElement("tr");
+
+                  let textCol = document.createElement("td");
+                  let durationCol = document.createElement("td");
+                  let beginDateCol = document.createElement("td");
+                  let dueDateCol = document.createElement("td");
+
+                  let text = document.createTextNode(current.text);
+                  let duration = document.createTextNode(current.duration/60000);
+                  let beginDate = document.createTextNode(current.beginDate);
+                  let dueDate = document.createTextNode(current.dueDate);
+
+                  textCol.appendChild(text);
+                  durationCol.appendChild(duration);
+                  beginDateCol.appendChild(beginDate);
+                  dueDateCol.appendChild(dueDate);
+
+                  row.appendChild(textCol);
+                  row.appendChild(durationCol);
+                  row.appendChild(beginDateCol);
+                  row.appendChild(dueDateCol);
+
+                  table.appendChild(row);
+                  document.body.appendChild(table);
+                }
+              })
+              .catch(error => {
+                // Handle any errors
+                console.error('Error:', error);
+              });
+
+    //console.log(fetchData());
+    //data = Object.values(fetchData());
+
+    //var tekst = document.createTextNode(data[0]);
+    
+    //wiersz.appendChild(tekst);
+
+    // Iterowanie przez tablicę danych
+    /*for (var i = 0; i < dane.length; i++) {
+      var wiersz = document.createElement("tr");
+
+      // Iterowanie przez elementy w wierszu
+      for (var j = 0; j < dane[i].length; j++) {
+        var komorka = document.createElement(i === 0 ? "th" : "td");
+        var tekst = document.createTextNode(dane[i][j]);
+        komorka.appendChild(tekst);
+        wiersz.appendChild(komorka);
+      }
+
+      tabela.appendChild(wiersz);
+    }*/
+
+    // Dodanie tabeli do dokumentu
+    
+  }
+</script>
+</body>
+</html>
