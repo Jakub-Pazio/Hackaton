@@ -19,6 +19,10 @@ class RegularTask {
     this.length = length,
     this.dueTime = dueTime;
   }
+
+  getDueTime() {
+    return this.dueTime.split(":");
+  }
 }
 
 const comparator = (a, b) => {
@@ -26,8 +30,8 @@ const comparator = (a, b) => {
   var timeA = a.dueDate.getTime() - a.length;
   var timeB = b.dueDate.getTime() - b.length;
 
-  var valueA = timeA + a.userPriority + a.systemPriority;
-  var valueB = timeB + b.userPriority + b.systemPriority;
+  var valueA = timeA + a.priority;
+  var valueB = timeB + b.priority;
 
   if(timeA > timeB)
     valueA+=10;
@@ -76,6 +80,17 @@ export function loadRegularTasksData() {
 }
 
 export function refreshRegularTasks() {
+  for(const rTask in regularTasks) {
+    let date = new Date(Date.now());
+    dueTime = rTask.getDueTime();
+    date.setHours(dueTime[0], dueTime[1], dueTime[2])
+    if(Date.now().getTime() > date.getTime()) {
+      date.setDate(date.getDate()+1);
+    }
+    
+    let newTask = new Task(rTask.text, rTask.priority, rTask.length, date);
+    currentTasks.push(newTask);
+  }
   let date = new Date(Date.now())
   date.setDate(date.getDate()+1)
   date.setHours(Properties.wakeupTime[0],Properties.wakeupTime[1],Properties.wakeupTime[2]);

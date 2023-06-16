@@ -2,7 +2,7 @@ import express from 'express';
 const app = express()
 const port = 3000
 
-import {addNewTask, getCurrentTask, setTaskCompleted, loadRegularTasksData, getTasksCount} from "./database.js";
+import {addNewTask, getCurrentTask, setTaskCompleted, loadRegularTasksData, getTasksCount, refreshRegularTasks} from "./database.js";
 
 // Serve static files from the "public" directory
 app.use(express.static('public'));
