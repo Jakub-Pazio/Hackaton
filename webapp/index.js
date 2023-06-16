@@ -42,8 +42,8 @@ app.post('/endtask', (req, res) => {
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
-  addNewTask("1", 5, 10000, new Date("2023-12-17T03:24:00"), true)
-  addNewTask("drugi", 3, 10000, new Date("2023-12-17T03:25:00"), true)
+  addNewTask("Do a laundry.", 5, 10000, new Date("2023-12-17T03:24:00"), true)
+  addNewTask("Go to shop.", 3, 10000, new Date("2023-12-17T03:25:00"), true)
   console.log(getCurrentTaskObject())
   loadRegularTasksData()
   refreshRegularTasks()
