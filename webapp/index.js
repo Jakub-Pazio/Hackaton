@@ -13,13 +13,13 @@ app.get('/', (req, res) => {
 });
 
 app.get('/action', (req, res) => {
-  res.send({ cosik: currentTasks });
+  res.send({ cosik: getCurrentTask() });
 });
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
-  addNewTask("drugi", 5, 15000, new Date("2023-12-17T03:24:00"))
   addNewTask("1", 5, 10000, new Date("2023-12-17T03:24:00"))
+  addNewTask("drugi", 10000, 10000, new Date("2023-12-17T03:24:00"))
   console.log(getCurrentTask())
 })
 

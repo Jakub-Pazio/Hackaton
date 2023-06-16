@@ -11,7 +11,7 @@ class Task {
   }
 };
 
-const taskComparator = (a, b) => {
+const comparator = (a, b) => {
 
   var timeA = a.dueDate.getTime() - a.length;
   var timeB = b.dueDate.getTime() - b.length;
@@ -32,7 +32,7 @@ const taskComparator = (a, b) => {
   return x > y ? 1 : -1;
 };
 
-const currentTasks = new PriorityQueue({ taskComparator });
+const currentTasks = new PriorityQueue({ comparator });
 var completedTasks = [];
 
 function lookupTasks() {
