@@ -3,12 +3,13 @@ import yaml from "js-yaml"
 import fs from "fs"
 
 class Task {
-  constructor(text,userPriority,duration,dueDate, taskId, subtaskId) {
+  constructor(text,userPriority,systemPriority,duration,dueDate,isSplittable, taskId, subtaskId) {
       this.text = text, // string
       this.userPriority = userPriority, // int 0-10
-      this.systemPriority = 0,
+      this.systemPriority = systemPriority,
       this.duration = duration, // remaining time ms
       this.dueDate = dueDate, // date
+      this.isSplittable = isSplittable;
       this.completed = false; // boolean
       this.taskId = taskId;
       this.subtaskId = subtaskId;
@@ -16,11 +17,12 @@ class Task {
 };
 
 class RegularTask {
-  constructor(text,priority,duration,dueTime) {
+  constructor(text,priority,duration,dueTime,isSplittable) {
     this.text = text,
     this.priority = priority,
     this.duration = duration,
     this.dueTime = dueTime;
+    this.isSplittable = isSplittable;
     }
 
 
@@ -52,7 +54,7 @@ var completedTasks = [];
 
 const regularTasks = [];
 
-function lookupTasks() {
+function refreshTaskQueue() {
     let t;
     for (t in currentTasks) {
         if(t.completed || Date.now() > t.dueDate) {
@@ -73,7 +75,7 @@ export function loadRegularTasksData() {
     const doc = yaml.load(fs.readFileSync('regularTasks.yml', 'utf8'));
     for(const element in doc) {
       const properties = doc[element]
-      regularTasks.push(new RegularTask(element, properties.priority, properties.length, properties.dueTime))
+      regularTasks.push(new RegularTask(element, properties.priority, properties.length, properties.dueTime,properties.isSplittable))
     }
   } catch (e) {
     console.log(e);
@@ -89,13 +91,23 @@ export function refreshRegularTasks() {
     if(Date.now() > date.getTime()) {
       date.setDate(date.getDate()+1);
     }
-    addNewTask(rTask.text, rTask.priority, rTask.duration, date)
+    addNewTask(rTask.text, rTask.priority, rTask.duration, date,rTask.isSplittable)
   });
 }
 
-export function getCurrentTask() {
-    lookupTasks();
+export function getCurrentTaskObject() {
+    refreshTaskQueue();
     return currentTasks.top();
+}
+
+export function getCurrentTask() {
+  let curr = getCurrentTaskObject();
+  return {
+    text: curr.text,
+    duration: curr.duration,
+    dueDate: curr.dueDate,
+    beginDate: new Date(curr.dueDate.getTime() - curr.duration)
+  }
 }
 
 
@@ -113,19 +125,25 @@ export function getTasksCount() {
 
 const blockDuration = 900000; // 15 min
 let taskId = 0
-export function addNewTask(text,userPriority,duration,dueDate) {
-  let amountOfBlocks = Math.ceil(duration / blockDuration);
-  for(let i = 0; i < amountOfBlocks; i++) {
-    let currentDuration = blockDuration;
-    duration -= currentDuration;
+export function addNewTask(text,userPriority,duration,dueDate,isSplittable) {
+  if(isSplittable) {
+    let amountOfBlocks = Math.ceil(duration / blockDuration);
+    for(let i = 0; i < amountOfBlocks; i++) {
+      let currentDuration = blockDuration;
+      duration -= currentDuration;
 
-    let timeLeft = Math.min(blockDuration, duration);
-    
-    if(timeLeft < blockDuration)
-      currentDuration+=timeLeft;
-    duration -= timeLeft;
+      let timeLeft = Math.min(blockDuration, duration);
 
-    currentTasks.push(new Task(text,userPriority,currentDuration, dueDate, taskId, i))
+      if(timeLeft < blockDuration)
+        currentDuration+=timeLeft;
+      duration -= timeLeft;
+
+      let systemPriority = i;
+
+      currentTasks.push(new Task(text,userPriority,systemPriority,currentDuration, dueDate,isSplittable, taskId, i))
+    }
+  } else {
+    currentTasks.push(new Task(text,userPriority,0,duration,dueDate,isSplittable, taskId, 0))
   }
   taskId++;
 }

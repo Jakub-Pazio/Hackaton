@@ -2,7 +2,7 @@ import express from 'express';
 const app = express()
 const port = 3000
 
-import {addNewTask, getCurrentTask, setTaskCompleted, loadRegularTasksData, getTasksCount, refreshRegularTasks, printAllTasks} from "./database.js";
+import {addNewTask, getCurrentTask, setTaskCompleted, loadRegularTasksData, getTasksCount, refreshRegularTasks, printAllTasks, getCurrentTaskObject} from "./database.js";
 
 // Serve static files from the "public" directory
 app.use(express.static('public'));
@@ -15,24 +15,25 @@ app.get('/', (req, res) => {
 });
 
 app.get('/action', (req, res) => {
-  res.send({ cosik: getCurrentTask() });
+  res.send({ cosik: getCurrentTaskObject() });
 });
 
 app.post('/send', (req, res) => {
-  console.log(req.body.text, req.body.userPriority, req.body.length, new Date(req.body.dueDate));
-  addNewTask(req.body.text, req.body.userPriority, req.body.length, new Date(req.body.dueDate));
+  console.log(req.body.text, req.body.userPriority, req.body.length, new Date(req.body.dueDate), true);
+  addNewTask(req.body.text, req.body.userPriority, req.body.length, new Date(req.body.dueDate), true);
   //console.log()
   res.json({ result: "added" });
   console.log(getTasksCount())
   printAllTasks()
+  console.log(getCurrentTask())
 });
 
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
-  addNewTask("1", 5, 10000, new Date("2023-12-17T03:24:00"))
-  addNewTask("drugi", 3, 10000, new Date("2023-12-17T03:25:00"))
-  console.log(getCurrentTask())
+  addNewTask("1", 5, 10000, new Date("2023-12-17T03:24:00"), true)
+  addNewTask("drugi", 3, 10000, new Date("2023-12-17T03:25:00"), true)
+  console.log(getCurrentTaskObject())
   loadRegularTasksData()
   refreshRegularTasks()
 })
