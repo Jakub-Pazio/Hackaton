@@ -148,19 +148,20 @@ fetch('/action')
                 <button id="buttonDayTasks" onclick="clickDays()">EVENTS ON THAT DAY</button>
                 <button id="buttonNewTasks" onclick="clickTasks()">ADD NEW EVENT</button>
                 <div id="form">
-                    <form>
-                        <label for="name">Name</label><br>
-                        <input type="text" id="name" name="name" size="40"><br><br><br>
-                        <label for="deadline">Deadline</label><br>
-                        <input type="datetime-local" id="deadline" name="deadline" size="40"><br><br><br>
-                        <label for="duration">Duration</label><br>
-                        <input type="text" id="duration" name="duration" size="40"><br><br><br>
+                    <form action="/send" method="POST" id="taskForm">
+                        <label for="text">Name</label><br>
+                        <input type="text" id="text" name="text" size="40" required><br><br><br>
+                        <label for="dueDate">Deadline</label><br>
+                        <input type="datetime-local" id="dueDate" name="dueDate" size="40" required><br><br><br>
+                        <label for="length">Duration</label><br>
+                        <input type="text" id="length" name="length" size="40" required><br><br><br>
                         <label for="tags">Tags</label><br>
-                        <input type="text" id="tags" name="tags" size="40"><br><br><br>
-                        <label for="importance">Importance</label><br>
-                        <input type="text" id="importance" name="importance" size="40"><br><br><br>
+                        <input type="text" id="tags" name="tags" size="40" required><br><br><br>
+                        <label for="userPriority">Importance</label><br>
+                        <input type="text" id="userPriority" name="userPriority" size="40" min="0" max="10" required><br><br><br>
+                        <button type="submit" id="buttonAdd"> ADD </button>
                     </form>
-                    <button id="buttonAdd"> ADD </button>
+
                 </div>
                 <div id="dayTasks">
                 </div>
@@ -208,6 +209,38 @@ fetch('/action')
             form.style.display = 'block';
         }
 
+        document.getElementById('taskForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the form from submitting normally
+
+            // Fetch the form data
+            const form = document.getElementById('taskForm');
+            const formData = new FormData(form);
+            // Create the request body
+            const body = {
+                text: formData.get('text'),
+                userPriority: formData.get('userPriority'),
+                length: formData.get('length'),
+                dueDate: formData.get('dueDate')
+            };
+
+            // Send the POST request
+            fetch('/send', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(body)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data); // Log the response data
+                    // Perform any desired actions with the response data
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    // Handle any errors that occurred during the request
+                });
+        });
     </script>
 </body>
 
