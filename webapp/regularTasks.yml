@@ -1,4 +1,4 @@
 sleep:
   priority: 5
-  length: 480
+  length: 28800000
   dueTime: 07:00:00

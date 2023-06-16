@@ -3,22 +3,25 @@ import yaml from "js-yaml"
 import fs from "fs"
 
 class Task {
-  constructor(text,priority,length,dueDate) {
+  constructor(text,userPriority,duration,dueDate, taskId, subtaskId) {
       this.text = text, // string
-      this.priority = priority, // int 0-10
-      this.length = length, // time ms
+      this.userPriority = userPriority, // int 0-10
+      this.systemPriority = 0,
+      this.duration = duration, // remaining time ms
       this.dueDate = dueDate, // date
       this.completed = false; // boolean
+      this.taskId = taskId;
+      this.subtaskId = subtaskId;
   }
 };
 
 class RegularTask {
-  constructor(text,priority,length,dueTime) {
+  constructor(text,priority,duration,dueTime) {
     this.text = text,
     this.priority = priority,
-    this.length = length,
+    this.duration = duration,
     this.dueTime = dueTime;
-  }
+    }
 
 
 }
@@ -28,22 +31,20 @@ function getDueTime(rTask) {
 
 const comparator = (a, b) => {
 
-  var timeA = a.dueDate.getTime() - a.length;
-  var timeB = b.dueDate.getTime() - b.length;
+  var latestBeginA = a.dueDate.getTime() - a.duration;
+  var latestBeginB = b.dueDate.getTime() - b.duration;
 
-  var valueA = timeA + a.priority
-  var valueB = timeB + b.priority
-  if(timeA > timeB)
-    valueA+=10;
-  else if (timeA < timeB)
-    valueB+=10;
+  var priorityA = a.userPriority;
+  var priorityB = b.userPriority;
 
-  //...//
+  if(latestBeginA < latestBeginB)
+    priorityA+=10;
+  else if (latestBeginA > latestBeginB)
+    priorityB+=10;
+  
+    //...//
 
-  var x = valueA;
-  var y = valueB;
-
-  return x > y ? 1 : -1;
+  return priorityA > priorityB ? 1 : -1;
 };
 
 const currentTasks = new PriorityQueue({ comparator });
@@ -88,7 +89,7 @@ export function refreshRegularTasks() {
     if(Date.now() > date.getTime()) {
       date.setDate(date.getDate()+1);
     }
-    addNewTask(rTask.text, rTask.priority, rTask.length, date)
+    addNewTask(rTask.text, rTask.priority, rTask.duration, date)
   });
 }
 
@@ -96,6 +97,7 @@ export function getCurrentTask() {
     lookupTasks();
     return currentTasks.top();
 }
+
 
 export function setTaskCompleted(task) {
     task.completed = true;
@@ -109,9 +111,23 @@ export function getTasksCount() {
     return currentTasks.length;
 }
 
-export function addNewTask(text,priority,length,dueDate) {
-  let t = new Task(text,priority,length,dueDate)
-  currentTasks.push(t)
+const blockDuration = 900000; // 15 min
+let taskId = 0
+export function addNewTask(text,userPriority,duration,dueDate) {
+  let amountOfBlocks = Math.ceil(duration / blockDuration);
+  for(let i = 0; i < amountOfBlocks; i++) {
+    let currentDuration = blockDuration;
+    duration -= currentDuration;
+
+    let timeLeft = Math.min(blockDuration, duration);
+    
+    if(timeLeft < blockDuration)
+      currentDuration+=timeLeft;
+    duration -= timeLeft;
+
+    currentTasks.push(new Task(text,userPriority,currentDuration, dueDate, taskId, i))
+  }
+  taskId++;
 }
 
 // END API
