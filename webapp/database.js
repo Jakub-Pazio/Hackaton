@@ -93,6 +93,10 @@ export function setTaskCompleted(task) {
     task.completed = true;
 }
 
+export function getTasksCount() {
+    return currentTasks.length;
+}
+
 export function addNewTask(text,priority,length,dueDate) {
   let t = new Task(text,priority,length,dueDate)
   currentTasks.push(t)

@@ -2,7 +2,7 @@ import express from 'express';
 const app = express()
 const port = 3000
 
-import {addNewTask, getCurrentTask, setTaskCompleted, loadRegularTasksData} from "./database.js";
+import {addNewTask, getCurrentTask, setTaskCompleted, loadRegularTasksData, getTasksCount} from "./database.js";
 
 // Serve static files from the "public" directory
 app.use(express.static('public'));
@@ -23,6 +23,7 @@ app.post('/send', (req, res) => {
   addNewTask(req.body.text, req.body.userPriority, req.body.length, new Date(req.body.dueDate));
   //console.log()
   res.json({ result: "added" });
+  console.log(getTasksCount())
 });
 
 
