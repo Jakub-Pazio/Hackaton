@@ -2,7 +2,7 @@ import express from 'express';
 const app = express()
 const port = 3000
 
-import {addNewTask, getCurrentTask, setTaskCompleted, loadRegularTasksData, getTasksCount, refreshRegularTasks, printAllTasks, getCurrentTaskObject} from "./database.js";
+import {addNewTask, getCurrentTask, setTaskCompleted, loadRegularTasksData, getTasksCount, refreshRegularTasks, printAllTasks, getCurrentTaskObject, getAllTasks} from "./database.js";
 
 // Serve static files from the "public" directory
 app.use(express.static('public'));
@@ -15,7 +15,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/action', (req, res) => {
-  res.send({ currentTask: getCurrentTask() });
+  res.send({ allTasks: getAllTasks() });
 });
 
 app.post('/send', (req, res) => {

@@ -84,32 +84,37 @@ document.getElementById('taskForm').addEventListener('submit', function(event) {
               .then(response => response.json())
               .then(data => {
                 console.log(data)
-                //let values = Object.values(data);
-                let table = document.createElement("table");
-                let row = document.createElement("tr");
+                let objects = data.allTasks;
 
-                let textCol = document.createElement("td");
-                let durationCol = document.createElement("td");
-                let beginDateCol = document.createElement("td");
-                let dueDateCol = document.createElement("td");
+                for(let i = 0; i < objects.length; i++) {
+                  let current = objects[i];
 
-                let text = document.createTextNode(data.currentTask.text);
-                let duration = document.createTextNode(data.currentTask.duration/60000);
-                let beginDate = document.createTextNode(data.currentTask.beginDate);
-                let dueDate = document.createTextNode(data.currentTask.dueDate);
+                  let table = document.createElement("table");
+                  let row = document.createElement("tr");
 
-                textCol.appendChild(text);
-                durationCol.appendChild(duration);
-                beginDateCol.appendChild(beginDate);
-                dueDateCol.appendChild(dueDate);
+                  let textCol = document.createElement("td");
+                  let durationCol = document.createElement("td");
+                  let beginDateCol = document.createElement("td");
+                  let dueDateCol = document.createElement("td");
 
-                row.appendChild(textCol);
-                row.appendChild(durationCol);
-                row.appendChild(beginDateCol);
-                row.appendChild(dueDateCol);
+                  let text = document.createTextNode(current.text);
+                  let duration = document.createTextNode(current.duration/60000);
+                  let beginDate = document.createTextNode(current.beginDate);
+                  let dueDate = document.createTextNode(current.dueDate);
 
-                table.appendChild(row);
-                document.body.appendChild(table);
+                  textCol.appendChild(text);
+                  durationCol.appendChild(duration);
+                  beginDateCol.appendChild(beginDate);
+                  dueDateCol.appendChild(dueDate);
+
+                  row.appendChild(textCol);
+                  row.appendChild(durationCol);
+                  row.appendChild(beginDateCol);
+                  row.appendChild(dueDateCol);
+
+                  table.appendChild(row);
+                  document.body.appendChild(table);
+                }
               })
               .catch(error => {
                 // Handle any errors

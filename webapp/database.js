@@ -110,10 +110,30 @@ export function getCurrentTask() {
   }
 }
 
+export function getAllTasks() {
+  let returnArray = []
+
+  let currTasksArray = currentTasks.toArray();
+  for(let i = 0; i < currTasksArray.length; i++) {
+    let t = currTasksArray[i];
+    let curr = {
+      text: t.text,
+      duration: t.duration,
+      dueDate: t.dueDate,
+      beginDate: new Date(t.dueDate.getTime() - t.duration)
+    }
+    returnArray.push(curr);
+  }
+
+  return returnArray;
+  }
+
 
 export function setTaskCompleted(task) {
     task.completed = true;
 }
+
+
 
 export function printAllTasks(){
     console.log(currentTasks)
