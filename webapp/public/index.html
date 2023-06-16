@@ -5,75 +5,107 @@
   <script>
     function fetchData() {
       fetch('/action')
-        .then(response => response.json())
-        .then(data => {
-          // Use the received data
-          console.log(data);
-        })
-        .catch(error => {
-          // Handle any errors
-          console.error('Error:', error);
-        });
+              .then(response => response.json())
+              .then(data => {
+                // Use the received data
+                console.log(data);
+              })
+              .catch(error => {
+                // Handle any errors
+                console.error('Error:', error);
+              });
     }
   </script>
 </head>
 <body>
-  <h1>Fetch Data Example</h1>
-  <button onclick="fetchData()">Fetch Data</button>
+<h1>Fetch Data Example</h1>
+<button onclick="fetchData()">Fetch Data</button>
+<h1>Create Task</h1>
+<form action="/send" method="POST" id="taskForm">
   <h1>Create Task</h1>
-  <form action="/send" method="POST" id="taskForm">
-    <h1>Create Task</h1>
-  
-    <label for="text">Task Text:</label>
-    <input type="text" id="text" name="text" required><br><br>
-  
-    <label for="userPriority">User Priority (0-10):</label>
-    <input type="number" id="userPriority" name="userPriority" min="0" max="10" required><br><br>
-  
-    <label for="length">Task Length (ms):</label>
-    <input type="number" id="length" name="length" required><br><br>
-  
-    <label for="dueDate">Due Date:</label>
-    <input type="datetime-local" id="dueDate" name="dueDate" required><br><br>
-  
-    <button type="submit" id="buttonsend">Create Task</button>
-  </form>
-  
-  <script>
-    document.getElementById('taskForm').addEventListener('submit', function(event) {
-      event.preventDefault(); // Prevent the form from submitting normally
-  
-      // Fetch the form data
-      const form = document.getElementById('taskForm');
-      const formData = new FormData(form);
-  
-      // Create the request body
-      const body = {
-        text: formData.get('text'),
-        userPriority: formData.get('userPriority'),
-        length: formData.get('length'),
-        dueDate: formData.get('dueDate')
-      };
-  
-      // Send the POST request
-      fetch('/send', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(body)
-      })
-        .then(response => response.json())
-        .then(data => {
-          console.log(data); // Log the response data
-          // Perform any desired actions with the response data
-        })
-        .catch(error => {
-          console.error('Error:', error);
-          // Handle any errors that occurred during the request
-        });
-    });
-  </script>  
-  
+
+  <label for="text">Task Text:</label>
+  <input type="text" id="text" name="text" required><br><br>
+
+  <label for="userPriority">User Priority (0-10):</label>
+  <input type="number" id="userPriority" name="userPriority" min="0" max="10" required><br><br>
+
+  <label for="length">Task Length (ms):</label>
+  <input type="number" id="length" name="length" required><br><br>
+
+  <label for="dueDate">Due Date:</label>
+  <input type="datetime-local" id="dueDate" name="dueDate" required><br><br>
+
+  <button type="submit" id="buttonsend">Create Task</button>
+
+  <button type="button" id="crTab" onclick="createTable()">Create Table</button>
+</form>
+
+<script>
+  document.getElementById('taskForm').addEventListener('submit', function(event) {
+    event.preventDefault(); // Prevent the form from submitting normally
+
+    // Fetch the form data
+    const form = document.getElementById('taskForm');
+    const formData = new FormData(form);
+
+    // Create the request body
+    const body = {
+      text: formData.get('text'),
+      userPriority: formData.get('userPriority'),
+      length: formData.get('length'),
+      dueDate: formData.get('dueDate')
+    };
+
+    // Send the POST request
+    fetch('/send', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    })
+            .then(response => response.json())
+            .then(data => {
+              console.log(data); // Log the response data
+              dane.push(data.get('text'))
+              dane.push(data.get('userPriority'))
+              dane.push(data.get('length'))
+              dane.push(data.get('dueDate'))
+              // Perform any desired actions with the response data
+            })
+            .catch(error => {
+              console.error('Error:', error);
+              // Handle any errors that occurred during the request
+            });
+  });
+  var dane = [];
+
+  function createTable(){
+    var tabela = document.createElement("table");
+
+    // Iterowanie przez tablicę danych
+    for (var i = 0; i < dane.length; i++) {
+      var wiersz = document.createElement("tr");
+
+      // Iterowanie przez elementy w wierszu
+      for (var j = 0; j < dane[i].length; j++) {
+        var komorka = document.createElement(i === 0 ? "th" : "td");
+        var tekst = document.createTextNode(dane[i][j]);
+        komorka.appendChild(tekst);
+        wiersz.appendChild(komorka);
+      }
+
+      tabela.appendChild(wiersz);
+    }
+
+    // Dodanie tabeli do dokumentu
+    document.body.appendChild(tabela);
+  }
+
+
+
+</script>
+
 </body>
 </html>
