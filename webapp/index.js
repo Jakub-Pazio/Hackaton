@@ -6,6 +6,8 @@ import {addNewTask, getCurrentTask} from "./database.js";
 
 // Serve static files from the "public" directory
 app.use(express.static('public'));
+app.use(express.json()); // For handling JSON data
+app.use(express.urlencoded({ extended: true })); // For handling URL-encoded form data
 
 // Define a route to serve the HTML page
 app.get('/', (req, res) => {
@@ -15,6 +17,14 @@ app.get('/', (req, res) => {
 app.get('/action', (req, res) => {
   res.send({ cosik: getCurrentTask() });
 });
+
+app.post('/send', (req, res) => {
+  const { text, userPriority, length, dueDate } = req.body;
+  console.log(text, userPriority, length, dueDate);
+  addNewTask(text, userPriority, length, dueDate);
+  res.send({ result: "added" });
+});
+
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
