@@ -2,11 +2,11 @@ import PriorityQueue from "priorityqueue";
 
 const task = {
   text: 'Unnamed task',
-  userPriority: 0,
-  systemPriority: 0,
-  length: 0.0,
-  completed: false,
-  dueDate: null
+  userPriority: 0, // 0-10
+  systemPriority: 0, // 0-10
+  length: 0, // ms
+  completed: false, 
+  dueDate: null // date
 };
 
 const taskComparator = (a, b) => {
@@ -37,9 +37,14 @@ function lookupTasks() {
     let t;
     for (t in currentTasks) {
         if(t.completed || Date.now() > t.dueDate) {
-            myArray.splice(currentTasks.indexOf(t), 1);
+            currentTasks.splice(currentTasks.indexOf(t), 1);
         }
     }
+    temp = currentTasks.toArray();
+    currentTasks.clear();
+    temp.array.forEach(element => {
+        currentTasks.push(element);
+    });
 }
 
 // REGION API
@@ -53,7 +58,15 @@ function setTaskCompleted(task) {
     task.completed = true;
 }
 
-export default {getCurrentTask, setTaskCompleted}
+function addNewTask(text,userPriotity,length,dueDate) {
+  task.create()
+  task.text = text;
+  task.userPriority = userPriotity;
+  task.length = length;
+  task.dueDate = dueDate;
+}
+
+export default {getCurrentTask, setTaskCompleted, addNewTask}
 
 // END REGION API
 
