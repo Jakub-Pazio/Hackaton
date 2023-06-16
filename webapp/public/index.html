@@ -48,7 +48,10 @@
     // Fetch the form data
     const form = document.getElementById('taskForm');
     const formData = new FormData(form);
-
+    dane.push(formData.get('text'));
+    dane.push(formData.get('userPriority'));
+    dane.push(formData.get('length'));
+    dane.push(formData.get('dueDate'));
     // Create the request body
     const body = {
       text: formData.get('text'),
@@ -68,10 +71,6 @@
             .then(response => response.json())
             .then(data => {
               console.log(data); // Log the response data
-              dane.push(data.get('text'))
-              dane.push(data.get('userPriority'))
-              dane.push(data.get('length'))
-              dane.push(data.get('dueDate'))
               // Perform any desired actions with the response data
             })
             .catch(error => {

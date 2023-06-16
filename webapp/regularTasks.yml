@@ -2,41 +2,41 @@ sleep:
   priority: 5
   length: 28800000
   dueTime: 07:00:00
-  isSplitable: false
+  isSplittable: false
 
 waterPlant:
   priority: 6
   length: 60000
   dueTime: 07:15:00
-  isSplitable: false
+  isSplittable: false
 
 eatBreakfast:
   priority: 10
   length: 600000
   dueTime: 7:30:00
-  isSplitable: false
+  isSplittable: false
 
 
 eat2ndBreakfast:
   priority: 3
   length: 120000
   dueTime: 12:00:00
-  isSplitable: false
+  isSplittable: false
 
 eatLunch:
   priority: 7
   length: 1200000
   dueTime: 14:30:00
-  isSplitable: false
+  isSplittable: false
 
 snackTime:
   priority: 2
   length: 300000
   dueTime: 17:00:00
-  isSplitable: false
+  isSplittable: false
 
 eatDinner:
   priority: 5
   length: 600000
   dueTime: 21:00:00
-  isSplitable: false
+  isSplittable: false
