@@ -28,6 +28,17 @@ app.post('/send', (req, res) => {
   console.log(getCurrentTask())
 });
 
+app.post('/endtask', (req, res) => {
+  let tid = req.body.taskId;
+  let stid = req.body.subTaskId;
+
+  console.log(tid);
+  console.log(stid);
+
+
+  setTaskCompleted(tid,stid);
+});
+
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)

@@ -55,19 +55,20 @@ var completedTasks = [];
 const regularTasks = [];
 
 function refreshTaskQueue() {
+  console.log("refresh");
     let t;
+    let newArray = currentTasks.toArray();
     for (t in currentTasks) {
-        if(t.completed || Date.now() > t.dueDate) {
-            completedTasks.push(currentTasks.indexOf(t))
-            currentTasks.splice(currentTasks.indexOf(t), 1);
+        if(Date.now() > t.dueDate) {
+          newArray = newArray.splice(newArray.indexOf(t));
+          
         }
     }
-    let temp = currentTasks.toArray();
     currentTasks.clear();
-    temp.forEach(element => {
-        currentTasks.push(element);
-    });
-}
+    newArray.forEach(t => currentTasks.push(t));
+  
+    }
+
 
 // API
 
@@ -107,7 +108,9 @@ export function getCurrentTask() {
     text: curr.text,
     duration: curr.duration,
     dueDate: curr.dueDate,
-    beginDate: new Date(curr.dueDate.getTime() - curr.duration)
+    beginDate: new Date(curr.dueDate.getTime() - curr.duration),
+    taskId: curr.taskId,
+    subtaskId: curr.subtaskId
   }
 }
 
@@ -121,7 +124,9 @@ export function getAllTasks() {
       text: t.text,
       duration: t.duration,
       dueDate: t.dueDate,
-      beginDate: new Date(t.dueDate.getTime() - t.duration)
+      beginDate: new Date(t.dueDate.getTime() - t.duration),
+      taskId: t.taskId,
+      subtaskId: t.subtaskId
     }
     returnArray.push(curr);
   }
@@ -130,8 +135,17 @@ export function getAllTasks() {
   }
 
 
-export function setTaskCompleted(task) {
-    task.completed = true;
+export function setTaskCompleted(tid, stid) {
+    let task = currentTasks.toArray().find(t => t.taskId == tid && t.subtaskId == stid);
+    console.log(task);
+    let newArray = currentTasks.toArray();
+    let removed = newArray.splice(newArray.indexOf(task),1);
+
+    removed[0].completed = true;
+    completedTasks.push(removed[0])
+
+    currentTasks.clear();
+    newArray.forEach(t => currentTasks.push(t));
 }
 
 

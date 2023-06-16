@@ -7,30 +7,65 @@
     <title>Document</title>
     <link rel="stylesheet" href="style.css">
     <script>
-        var toDoNowPrompt = document.createElement("div");
+
+fetch('/action')
+              .then(response => response.json())
+              .then(data => {
+
+      var toDoNowPrompt = document.createElement("div");
         var upcomingTaskList = [];
         for (var i = 0; i < 5; i++) {
             var toDoNext = document.createElement("div");
             upcomingTaskList.push(toDoNext);
         }
-        window.onload = function () {
-
-            toDoNowPromptText = "Try not to die from fatigue";
+        let objects = data.allTasks;
+          console.log(objects);
+          let currentObject = objects[0];
+          console.log(currentObject);
+            toDoNowPromptText = currentObject.text;
             toDoNowPrompt.appendChild(document.createTextNode(toDoNowPromptText));
             toDoNowPrompt.classList.add("toDoNowPrompt");
             document.getElementById('toDoNowBody').appendChild(toDoNowPrompt);
+            document.getElementById('toDoNowBody').setAttribute("taskId", currentObject.taskId)
+            document.getElementById('toDoNowBody').setAttribute("subtaskId", currentObject.subtaskId)
 
             console.log(upcomingTaskList.length)
-            for (let i = 0; i < 5; i++) {
-                toDoNextText = "duopa duapa duapa duopa  ";
-                upcomingTaskList[i].appendChild(document.createTextNode("•" + toDoNextText));
-                upcomingTaskList[i].classList.add("toDoNextPrompt");
-                document.getElementById('toDoNextBody').appendChild(upcomingTaskList[i]);
+            let max = Math.min(6, objects.length)
+            for (let i = 1; i < max; i++) {
+                toDoNextText = objects[i].text;
+                upcomingTaskList[i-1].appendChild(document.createTextNode("•" + toDoNextText));
+                upcomingTaskList[i-1].classList.add("toDoNextPrompt");
+                document.getElementById('toDoNextBody').appendChild(upcomingTaskList[i-1]);
             }
-        }
+    })
+    .catch(error => {
+      // Handle any errors
+      console.error('Error:', error);
+    })
+    
+        
         function changePrompot(prompt, text) {
             toDoNowPrompt.firstChild.textContent = text;
         }
+
+        function endTask() {
+          let taskid = document.getElementById('toDoNowBody').getAttribute("taskid");
+          let subtaskid = document.getElementById('toDoNowBody').getAttribute("subtaskid");
+          console.log(subtaskid);
+          const body = {
+            taskId: taskid,
+            subTaskId: subtaskid
+          };
+          console.log(body.subTaskId);
+
+          fetch('/endtask', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(body)
+          });
+    } 
     </script>
 </head>
 
@@ -41,7 +76,7 @@
                 <div id="toDoNowHeader" class="toDoHeader">
                     <span class="headerText1"> ACTIVE TASK </span>
                 </div>
-                <button id="endTaskButton">END TASK</button>
+                <button id="endTaskButton" onclick="endTask()">END TASK</button>
             </div>
         </div>
         <div id="toDoNext" class="center">
