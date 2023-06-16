@@ -26,9 +26,8 @@ const comparator = (a, b) => {
   var timeA = a.dueDate.getTime() - a.length;
   var timeB = b.dueDate.getTime() - b.length;
 
-  var valueA = timeA + a.userPriority + a.systemPriority;
-  var valueB = timeB + b.userPriority + b.systemPriority;
-
+  var valueA = timeA + a.priority
+  var valueB = timeB + b.priority
   if(timeA > timeB)
     valueA+=10;
   else if (timeA < timeB)
