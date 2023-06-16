@@ -6,8 +6,8 @@ import {addNewTask, getCurrentTask, setTaskCompleted, initDatabase} from "./data
 
 // Serve static files from the "public" directory
 app.use(express.static('public'));
-app.use(express.json()); // For handling JSON data
-app.use(express.urlencoded({ extended: true })); // For handling URL-encoded form data
+app.use(express.urlencoded({ extended: true })); // Middleware to handle URL-encoded form data
+app.use(express.json()); // Middleware to handle JSON data
 
 // Define a route to serve the HTML page
 app.get('/', (req, res) => {
@@ -19,10 +19,10 @@ app.get('/action', (req, res) => {
 });
 
 app.post('/send', (req, res) => {
-  const { text, userPriority, length, dueDate } = req.body;
-  console.log(text, userPriority, length, dueDate);
-  addNewTask(text, userPriority, length, dueDate);
-  res.send({ result: "added" });
+  console.log(req.body.text, req.body.userPriority, req.body.length, new Date(req.body.dueDate));
+  addNewTask(req.body.text, req.body.userPriority, req.body.length, new Date(req.body.dueDate));
+  //console.log()
+  res.json({ result: "added" });
 });
 
 
