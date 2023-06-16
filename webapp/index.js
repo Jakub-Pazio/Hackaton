@@ -19,17 +19,10 @@ app.get('/action', (req, res) => {
 });
 
 app.post('/send', (req, res) => {
-<<<<<<< HEAD
-  const { text, priority, length, dueDate } = req.body;
-  console.log(text, priority, length, dueDate);
-  addNewTask(text, priority, length, dueDate);
-  res.send({ result: "added" });
-=======
   console.log(req.body.text, req.body.userPriority, req.body.length, new Date(req.body.dueDate));
   addNewTask(req.body.text, req.body.userPriority, req.body.length, new Date(req.body.dueDate));
   //console.log()
   res.json({ result: "added" });
->>>>>>> refs/remotes/origin/main
 });
 
 
