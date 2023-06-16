@@ -20,9 +20,10 @@ class RegularTask {
     this.dueTime = dueTime;
   }
 
-  getDueTime() {
-    return this.dueTime.split(":");
-  }
+
+}
+function getDueTime(rTask) {
+    return rTask.dueTime.split(":");
 }
 
 const comparator = (a, b) => {
@@ -79,23 +80,16 @@ export function loadRegularTasksData() {
 }
 
 export function refreshRegularTasks() {
-  for(const rTask in regularTasks) {
+  regularTasks.forEach(rTask => {
+      console.log(rTask);
     let date = new Date(Date.now());
-    dueTime = rTask.getDueTime();
+    let dueTime = getDueTime(rTask)
     date.setHours(dueTime[0], dueTime[1], dueTime[2])
-    if(Date.now().getTime() > date.getTime()) {
+    if(Date.now() > date.getTime()) {
       date.setDate(date.getDate()+1);
     }
-    
-    let newTask = new Task(rTask.text, rTask.priority, rTask.length, date);
-    currentTasks.push(newTask);
-  }
-  let date = new Date(Date.now())
-  date.setDate(date.getDate()+1)
-  date.setHours(Properties.wakeupTime[0],Properties.wakeupTime[1],Properties.wakeupTime[2]);
-  addNewTask("Sleep", 0, Properties.sleepLength, date)
-
-
+    addNewTask(rTask.text, rTask.priority, rTask.length, date)
+  });
 }
 
 export function getCurrentTask() {
@@ -105,6 +99,10 @@ export function getCurrentTask() {
 
 export function setTaskCompleted(task) {
     task.completed = true;
+}
+
+export function printAllTasks(){
+    console.log(currentTasks)
 }
 
 export function getTasksCount() {

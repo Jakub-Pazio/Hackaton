@@ -2,7 +2,7 @@ import express from 'express';
 const app = express()
 const port = 3000
 
-import {addNewTask, getCurrentTask, setTaskCompleted, loadRegularTasksData, getTasksCount, refreshRegularTasks} from "./database.js";
+import {addNewTask, getCurrentTask, setTaskCompleted, loadRegularTasksData, getTasksCount, refreshRegularTasks, printAllTasks} from "./database.js";
 
 // Serve static files from the "public" directory
 app.use(express.static('public'));
@@ -24,15 +24,17 @@ app.post('/send', (req, res) => {
   //console.log()
   res.json({ result: "added" });
   console.log(getTasksCount())
+  printAllTasks()
 });
 
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
   addNewTask("1", 5, 10000, new Date("2023-12-17T03:24:00"))
-  addNewTask("drugi", 10000, 10000, new Date("2023-12-17T03:25:00"))
+  addNewTask("drugi", 3, 10000, new Date("2023-12-17T03:25:00"))
   console.log(getCurrentTask())
   loadRegularTasksData()
+  refreshRegularTasks()
 })
 
 
