@@ -49,24 +49,25 @@ function lookupTasks() {
 
 // REGION API
 
-function getCurrentTask() {
+export function getCurrentTask() {
     lookupTasks();
     return currentTasks.top();
 }
 
-function setTaskCompleted(task) {
+export function setTaskCompleted(task) {
     task.completed = true;
 }
 
-function addNewTask(text,userPriotity,length,dueDate) {
-  task.create()
-  task.text = text;
-  task.userPriority = userPriotity;
-  task.length = length;
-  task.dueDate = dueDate;
+export function addNewTask(text,userPriotity,length,dueDate) {
+  t = task.create()
+  t.text = text;
+  t.userPriority = userPriotity;
+  t.length = length;
+  t.dueDate = dueDate;
+  currentTasks.push(t);
 }
 
-export default {getCurrentTask, setTaskCompleted, addNewTask}
+// export default {getCurrentTask, setTaskCompleted, addNewTask}
 
 // END REGION API
 
